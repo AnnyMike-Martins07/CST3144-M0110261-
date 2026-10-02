@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+</head>
+<body>
+    <div id="mydiv">
+        <h3>Subject: {{subject}}</h3>
+        <h3>Location: {{location}}</h3>
+        <img :src="imageProperties.imagePath" style="width: 350px;" />
+    </div>
+    <script type="module">
+        const {createApp} = Vue;
+        createApp({
+            data() {
+                return {
+                    subject: "Computer Science",
+                        location: "Abeokuta",
+                        price: 300,
+                        imageProperties: {
+                            imagePath: "images/comp.jpg"
+                        }
+                }
+            }
+        }).mount('#mydiv')
+    </script>
+</body>
+</html>
