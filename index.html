@@ -1,23 +1,33 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=<device-width>, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
 </head>
 <body>
-    <script> src= "https://unpkg.com/vue@3/dist/vue.global.js"</script>
     <div id="mydiv">
-        
-            <div>
-
-                <script type="module">
-                    const {App} = Vue
-                const myApp = App({data()
-                    {return{message: "Hello World"}}
-                })
-                </script>
-    <h1>Hello World</h1>
-    <p>This is my first page</p>
+        <h3>Subject: {{subject}}</h3>
+        <p>Location: {{location}}</p>
+        <p>Price: Rs {{price}}</p>
+        <img :src="imageProperties.imagePath" style="width: 350px;" :alt="imageProperties.imageAlt" />
+    </div>
+    <script type="module">
+        const {createApp} = Vue;
+        createApp({
+            data() {
+                return {
+                    subject: "Computer Science",
+                        location: "Hendon",
+                        price: 700,
+                        imageProperties: {
+                            imagePath: "images/comp.jpg",
+                            imageAlt: "Computer Lessons"
+                        }
+                }
+            }
+        }).mount('#mydiv')
+    </script>
 </body>
 </html>
