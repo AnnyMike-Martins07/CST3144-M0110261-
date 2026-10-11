@@ -11,6 +11,12 @@
         <h3>Subject: {{subject}}</h3>
         <p>Location: {{location}}</p>
         <p>Price: Rs {{price}}</p>
+        <p>Available slots: {{available}}</p>
+        <p>Cart Items: {{cart}}</p>
+
+        <button @click="addToCart" :disabled="!canAddToCart">
+            Add to Cart
+        </button>
         <img :src="imageProperties.imagePath" style="width: 350px;" :alt="imageProperties.imageAlt" />
     </div>
     <script type="module">
@@ -21,10 +27,26 @@
                     subject: "Computer Science",
                         location: "Hendon",
                         price: 700,
+                        id: 1001,
+                        available: 5,
+                        cart: [],
                         imageProperties: {
                             imagePath: "images/comp.jpg",
                             imageAlt: "Computer Lessons"
                         }
+                }
+            },
+
+            methods: {
+                addToCart(){
+                    this.cart.push(this.id);
+                    this.available = this.available - 1;
+                }
+            },
+
+            computed: {
+                canAddToCart() {
+                    return this.available > 0;
                 }
             }
         }).mount('#mydiv')
