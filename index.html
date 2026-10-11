@@ -8,15 +8,28 @@
 </head>
 <body>
     <div id="mydiv">
+
+
+        <div v-if="!displayCart">
         <h3>Subject: {{subject}}</h3>
         <p>Location: {{location}}</p>
         <p>Price: Rs {{price}}</p>
         <p>Available slots: {{available}}</p>
         <p>Cart Items: {{cart}}</p>
+        </div>
+
+        <button @click="toggleCart" :disabled="numberOfItems=== 0">
+            Checkout({{numberOfItems}})
+        </button>
+
+        <div v-else>
+        <h3>Checkout</h3>
+        </div>
 
         <button @click="addToCart" :disabled="!canAddToCart">
             Add to Cart
         </button>
+       
         <img :src="imageProperties.imagePath" style="width: 350px;" :alt="imageProperties.imageAlt" />
     </div>
     <script type="module">
@@ -30,6 +43,7 @@
                         id: 1001,
                         available: 5,
                         cart: [],
+                        displayCart: false,
                         imageProperties: {
                             imagePath: "images/comp.jpg",
                             imageAlt: "Computer Lessons"
@@ -41,13 +55,22 @@
                 addToCart(){
                     this.cart.push(this.id);
                     this.available = this.available - 1;
-                }
+                },
+                
+                toggleCart() {
+                this.displayCart = !this.displayCart;
+            }
             },
 
             computed: {
                 canAddToCart() {
                     return this.available > 0;
-                }
+                },
+                numberOfItems() {
+                    return this.cart.length;
+            },
+
+
             }
         }).mount('#mydiv')
     </script>
