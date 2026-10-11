@@ -9,8 +9,9 @@
 <body>
     <div id="mydiv">
         <h3>Subject: {{subject}}</h3>
-        <h3>Location: {{location}}</h3>
-        <img :src="imageProperties.imagePath" style="width: 350px;" />
+        <p>Location: {{location}}</p>
+        <p>Price: Rs {{price}}</p>
+        <img :src="imageProperties.imagePath" style="width: 350px;" :alt="imageProperties.imageAlt" />
     </div>
     <script type="module">
         const {createApp} = Vue;
@@ -18,10 +19,11 @@
             data() {
                 return {
                     subject: "Computer Science",
-                        location: "Abeokuta",
+                        location: "Hendon",
                         price: 300,
                         imageProperties: {
-                            imagePath: "images/comp.jpg"
+                            imagePath: "images/comp.jpg",
+                            imageAlt: "Computer Lessons"
                         }
                 }
             }
