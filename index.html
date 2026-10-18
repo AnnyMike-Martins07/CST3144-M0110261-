@@ -33,8 +33,17 @@
         </button>
 
         <div v-else>
-        <h3>Checkout</h3>
-        <p>Cart Items: {{cart}}</p>
+        <h3>Shopping Cart</h3>
+        <div v-for="lesson in lessons" :key="lesson.id">
+            <div v-if="cart.includes(lesson.id)">
+                <h4>{{lesson.subject}}</h4>
+                <p>Location: {{lesson.location}}</p>
+                <p>Price per lesson: {{lesson.price}}</p>
+                <p>Quantity: {{cartQuantity(lesson)}}</p>
+                <button @click="removeFromCart(lesson)">Remove One</button>
+            </div>
+        </div>
+
         </div>
 
         
@@ -97,6 +106,18 @@
                 canAddToCart(lesson) {
                     return lesson.available > 0;
                 },
+
+                cartQuantity(lesson){
+                    return this.cart.filter(id=> id===lesson.id).length;
+                },
+
+                removeFromCart(lesson){
+                    const index=this.cart.indexOf(lesson.id);
+                    if (index != -1){
+                        this.cart.splice(index, 1);
+                        lesson.available = lesson.available + 1;
+                    }
+                }
             },
         
 
