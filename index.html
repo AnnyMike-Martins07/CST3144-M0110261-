@@ -11,7 +11,22 @@
 
 
         <div v-if="!displayCart">
-            <div v-for="lesson in lessons" :key="lesson.id">
+            <label for="sortType">Sort by:
+                <select id="sortType" v-model="sortType">
+                    <option value="subject">Subject</option>
+                    <option value="location">Location</option>
+                    <option value="price">Price</option>
+                    <option value="available">Availability</option>
+                </select>
+            </label>
+
+            <label for="sortOrder">Order:
+                <select id="sortOrder" v-model="isAscending">
+                    <option :value="true">Ascending</option>
+                    <option :value="false">Descending</option>
+                </select>
+            </label>
+            <div v-for="lesson in sortedLessons" :key="lesson.id">
         <h3>Subject: {{lesson.subject}}</h3>
         <p>Location: {{lesson.location}}</p>
         <p>Price: Rs {{lesson.price}}</p>
@@ -26,15 +41,17 @@
         </div>
         <p>Cart Items: {{cart}}</p>
 
-        </div>
-
-        <button @click="toggleCart" :disabled="numberOfItems=== 0">
+            <button @click="toggleCart" :disabled="numberOfItems=== 0">
             {{displayCart ? 'Back to Lessons' : 'Shopping Cart'}} ({{numberOfItems}})
         </button>
 
+
+        </div>
+
+    
         <div v-else>
         <h3>Shopping Cart</h3>
-        <div v-for="lesson in lessons" :key="lesson.id">
+        <div v-for="lesson in sortedLessons" :key="lesson.id">
             <div v-if="cart.includes(lesson.id)">
                 <h4>{{lesson.subject}}</h4>
                 <p>Location: {{lesson.location}}</p>
@@ -106,12 +123,27 @@
                     displayCart: false,
                     customerName: "",
                     customerPhone: "",
-                    orderSubmitted: false 
+                    orderSubmitted: false,
+                    sortType:"price",
+                    isAscending:true
 
                 }
             },
 
+            created(){
+                this.fetchData();
+            },
+
             methods: {
+
+                fetchData(){
+                    fetch("http://localhost:3000/")
+                    .then(response => response.json())
+                    .then(data => {
+                        this.lessons=data;
+                    })
+                },
+
                 addToCart(lesson){
                     this.cart.push(lesson.id);
                     lesson.available = lesson.available - 1;
@@ -154,7 +186,8 @@
                         this.customerName = "";
                         this.customerPhone = "";
                     }
-                }
+                },
+                
             },
         
 
@@ -167,6 +200,22 @@
                      const validNumber= /^[0-9]+$/.test(this.customerPhone);
 
                      return validName && validNumber;
+                },
+
+                sortedLessons() {
+                    return [...this.lessons].sort((a,b)=> {
+                        let result;
+                        
+                        if (this.sortType ==="price" || this.sortType ==="available") {
+                            result = a[this.sortType]-b[this.sortType];
+                        }
+                        else
+                        {
+                            result=a[this.sortType].localeCompare(b[this.sortType]);
+
+                        }
+                        return this.isAscending ? result: -result;
+                    });
                 },
 
             }
