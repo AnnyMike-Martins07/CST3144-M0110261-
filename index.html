@@ -29,7 +29,7 @@
         </div>
 
         <button @click="toggleCart" :disabled="numberOfItems=== 0">
-            Checkout({{numberOfItems}})
+            {{displayCart ? 'Back to Lessons' : 'Shopping Cart'}} ({{numberOfItems}})
         </button>
 
         <div v-else>
@@ -43,7 +43,23 @@
                 <button @click="removeFromCart(lesson)">Remove One</button>
             </div>
         </div>
+           <h3>Checkout</h3>
 
+           <p>Name:
+            <input type="text" v-model="customerName">
+           </p>
+
+           <p>Phone:
+            <input type="text" v-model="customerPhone">
+           </p>
+
+           <button :disabled="!validCheckout" @click="submitOrder">
+            Checkout
+           </button>
+
+           <p v-if="orderSubmitted">
+            Order has been submitted successfully!
+           </p>
         </div>
 
         
@@ -87,7 +103,10 @@
 
                 ],
                        cart: [],
-                    displayCart: false
+                    displayCart: false,
+                    customerName: "",
+                    customerPhone: "",
+                    orderSubmitted: false 
 
                 }
             },
@@ -117,6 +136,24 @@
                         this.cart.splice(index, 1);
                         lesson.available = lesson.available + 1;
                     }
+                },
+
+                submitOrder(){
+                    if(this.validCheckout){
+                        this.cart.forEach(id=> {
+                            const lesson = this.lessons.find(item =>item.id ===id);
+
+                            if(lesson)
+                        {
+                            lesson.available = lesson.available + 1;
+                        }
+                        })
+
+                        this.cart = [];
+                        this.orderSubmitted = true;
+                        this.customerName = "";
+                        this.customerPhone = "";
+                    }
                 }
             },
         
@@ -124,7 +161,13 @@
             computed: {
                 numberOfItems() {
                     return this.cart.length;
-                }
+                },
+                validCheckout(){
+                     const validName= /^[A-Za-z -]+$/.test(this.customerName.trim());
+                     const validNumber= /^[0-9]+$/.test(this.customerPhone);
+
+                     return validName && validNumber;
+                },
 
             }
         }).mount('#mydiv')
