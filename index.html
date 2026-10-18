@@ -11,11 +11,21 @@
 
 
         <div v-if="!displayCart">
-        <h3>Subject: {{subject}}</h3>
-        <p>Location: {{location}}</p>
-        <p>Price: Rs {{price}}</p>
-        <p>Available slots: {{available}}</p>
+            <div v-for="lesson in lessons" :key="lesson.id">
+        <h3>Subject: {{lesson.subject}}</h3>
+        <p>Location: {{lesson.location}}</p>
+        <p>Price: Rs {{lesson.price}}</p>
+        <p>Available slots: {{lesson.available}}</p>
+        <img :src="lesson.imagePath"
+             style="width:200px;"
+             :alt="lesson.imageAlt" />
+        
+
+        <button @click="addToCart(lesson)"
+                :disabled="!canAddToCart(lesson)">Add To Cart</button>
+        </div>
         <p>Cart Items: {{cart}}</p>
+
         </div>
 
         <button @click="toggleCart" :disabled="numberOfItems=== 0">
@@ -24,52 +34,76 @@
 
         <div v-else>
         <h3>Checkout</h3>
+        <p>Cart Items: {{cart}}</p>
         </div>
 
-        <button @click="addToCart" :disabled="!canAddToCart">
-            Add to Cart
-        </button>
-       
-        <img :src="imageProperties.imagePath" style="width: 350px;" :alt="imageProperties.imageAlt" />
+        
+        
     </div>
     <script type="module">
         const {createApp} = Vue;
         createApp({
             data() {
                 return {
-                    subject: "Computer Science",
+                   lessons: [
+                    {id:1001,
+                        subject: "Computer Science",
                         location: "Hendon",
                         price: 700,
-                        id: 1001,
                         available: 5,
-                        cart: [],
-                        displayCart: false,
-                        imageProperties: {
-                            imagePath: "images/comp.jpg",
-                            imageAlt: "Computer Lessons"
-                        }
+                        imagePath:"images/computer science lesson.jpg",
+                        imageAlt: "Computer Science Lesson"
+                    },
+
+                    {
+                        id: 1002,
+                        subject:"Mathematics",
+                        location: "Lagos, Nigeria",
+                        price: 1000,
+                        available: 5,
+                        imagePath: "images/mathematics lesson for coursework.jpg",
+                        imageAlt: "Mathematics Lesson"
+                    },
+
+                    {
+                        id:1003,
+                        subject: "English Language",
+                        location: "Heathrow, London",
+                        price: 1500,
+                        available: 5,
+                        imagePath: "images/english language picture for coursework.jpg",
+                        imageAlt: "English Language Lesson"
+                    },
+                      
+
+                ],
+                       cart: [],
+                    displayCart: false
+
                 }
             },
 
             methods: {
-                addToCart(){
-                    this.cart.push(this.id);
-                    this.available = this.available - 1;
+                addToCart(lesson){
+                    this.cart.push(lesson.id);
+                    lesson.available = lesson.available - 1;
                 },
                 
                 toggleCart() {
                 this.displayCart = !this.displayCart;
-            }
             },
+
+            
+                canAddToCart(lesson) {
+                    return lesson.available > 0;
+                },
+            },
+        
 
             computed: {
-                canAddToCart() {
-                    return this.available > 0;
-                },
                 numberOfItems() {
                     return this.cart.length;
-            },
-
+                }
 
             }
         }).mount('#mydiv')
